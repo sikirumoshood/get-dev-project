@@ -7,6 +7,9 @@ let aNode = document.getElementById("alert");
 // -------------------------------------END OF VARIABLES-------------------------------------------------
 
 function formatNumberWithEur(x) {
+    //Remove spaces
+    x = x.trim();
+
     //Remove commas
     let pureNumbers = x
         .toString()
@@ -16,7 +19,7 @@ function formatNumberWithEur(x) {
     let numbParts = pureNumbers.split(" ");
 
     //Only two parts expected (NUMBER AND EUR)
-    if (numbParts.length > 2 || pureNumbers.split(".").length > 2) {
+    if (numbParts.length !== 2 || pureNumbers.split(".").length > 2) {
         return null;
     }
 
@@ -28,7 +31,24 @@ function formatNumberWithEur(x) {
 function computeVAT(value) {
     return (parseFloat(value) * 0.2).toFixed(2);
 }
+// ------------------------------------------------------------------------------------------------
 
+function ensureOnlySingleConsecutiveSpace() {
+    //This ensures two spaces don't follow each other. e.g 1,300.45 <space> <space> EUR
+    let node = document.getElementById("exp_value");
+    node.addEventListener("keyup", e => {
+        let val = e.target.value;
+        const length = val.length;
+        if (length >= 2) {
+            if (
+                val.charAt(length - 2) === " " &&
+                val.charAt(length - 2) === val.charAt(length - 1)
+            ) {
+                node.value = val.substring(0, length - 1);
+            }
+        }
+    });
+}
 // -------------------------------------------------------------------------------------------------
 
 function convertEuroToPounds(euro, rate) {
@@ -236,6 +256,7 @@ function updateFormData() {
 //----------------------------------------------------------------------------------------------------
 
 function bindAllEvents() {
+    ensureOnlySingleConsecutiveSpace();
     bindFormEvent();
     bindExpEuroFieldEvent();
 }

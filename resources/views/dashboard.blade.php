@@ -85,8 +85,8 @@
     <!--======================================= SUBMITTED EXPENSES PANE ===================================  -->
     <div class="row justify-content-center mt-4">
 
-        <div class="col-10 table-pane" style="border-top-style:none">
-                <span > <h5 class="ml-3 mt-3"><i class="fa fa-tasks" style="color:purple"> </i>  Submitted expenses</h5> <hr/> </span>
+        <div class="col-10 table-pane" style="border-top-width:1px">
+                <span > <h5 class="ml-3 mt-3"><i class="fa fa-list-alt  " style="color:purple"> </i>  Submitted expenses</h5> <hr/> </span>
 
                 <!-- EXPENSES TABLE -->
                 <table id="exp_table" class="table table-bordered">

@@ -22,10 +22,12 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    
+
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light shadow-lg">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}" style="color:purple">
                     {{ config('app.name', 'Laravel') }}
@@ -81,6 +83,16 @@
             
         </main>
     </div>
+    
+    <footer class="footer">
+ 
+      <div class="container">
+ 
+      <p>&copy; Sikiru Moshood | GetDevProject</p>
+ 
+      </div>
+ 
+    </footer>
     <!-- LOAD SCRIPTS -->
     @if(Request::is('expenses'))
     <script src="/js/custom.js" defer></script>
