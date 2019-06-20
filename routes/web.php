@@ -19,3 +19,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/expenses', 'ExpensesController@index')->middleware('auth')->name('expenses');
+Route::post('/expenses', 'ExpensesController@store');

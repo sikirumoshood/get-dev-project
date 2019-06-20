@@ -45,11 +45,13 @@ function setVATorPoundValue(nodeId, value) {
 //----------------------------------------------------------------------------------------------------
 
 function setFormData() {
-    formData.euro = document.getElementById("exp_value").value;
-    formData.pound = document.getElementById("exp_value_pound").value;
-    formData.vat = document.getElementById("exp_vat").value;
-    formData.date = document.getElementById("exp_date").value;
-    formData.reason = document.getElementById("exp_reason").value;
+    formData.exp_value = formatNumberWithEur(
+        document.getElementById("exp_value").value
+    );
+    formData.exp_value_pound = document.getElementById("exp_value_pound").value;
+    formData.exp_vat = document.getElementById("exp_vat").value;
+    formData.exp_date = document.getElementById("exp_date").value;
+    formData.exp_reason = document.getElementById("exp_reason").value;
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -58,10 +60,60 @@ function bindFormEvent() {
     const form = document.getElementById("exp_form");
     form.addEventListener("submit", e => {
         e.preventDefault();
+        showProgress();
         setFormData();
-        //TODO: SEND TO SERVER
-        console.log(formData);
+        sendDataToServer(formData);
     });
+}
+
+//----------------------------------------------------------------------------------------------------
+
+function hideProgressAndStatusNodes() {
+    document.getElementById("progress").style = "display:none";
+    document.getElementById("status").style = "display:none";
+}
+
+//----------------------------------------------------------------------------------------------------
+function showStatus(statusCode) {
+    if (statusCode === "error") {
+        let node = document.getElementById("status");
+        node.style = "display:";
+        node.innerHTML =
+            "<i class='fa fa-times-circle-o' style='color:red'> </i> <small style='color:red'>Error saving expense!</small>";
+    } else if (statusCode === "success") {
+        let node = document.getElementById("status");
+        node.style = "display:";
+        node.innerHTML =
+            "<i class='fa fa-check-circle-o' style='color:green'> </i> <small style='color:green'>Expense submitted successfully!</small>";
+    } else {
+        console.error("Unknown status code");
+    }
+}
+
+//----------------------------------------------------------------------------------------------------
+function hideStatusNode(statusCode) {
+    if (statusCode === "error" || statusCode === "success") {
+        setTimeout(() => {
+            let node = document.getElementById("status");
+            node.style = "display:none";
+        }, 5000);
+    } else {
+        console.error("Unknown status code");
+    }
+}
+
+//----------------------------------------------------------------------------------------------------
+
+function showProgress() {
+    let node = document.getElementById("progress");
+    node.style = "display:";
+}
+
+//----------------------------------------------------------------------------------------------------
+
+function hideProgress() {
+    let node = document.getElementById("progress");
+    node.style = "display:none";
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -110,10 +162,13 @@ function bindExpEuroFieldEvent() {
 
                     displayPoundRate(rate);
                     updateVatAndPoundFields(pound);
-                    updateFormData(); // This will be submitted later after
+                    updateFormData(); // This will be submitted later
                     resetHeaders();
                 })
                 .catch(err => {
+                    alert(
+                        "Error fetching conversion rate. Please check your connection and reload page"
+                    );
                     console.error(err.response.data);
                 });
         } else {
@@ -135,13 +190,30 @@ function displayPoundRate(rate) {
 function showError(nodeId, message) {
     aNode.style = "";
     aNode.innerHTML = message;
-    document.getElementById(nodeId).style = "border-color:red";
+    document.getElementsByName(nodeId)[0].style = "border-color:red";
+}
+//----------------------------------------------------------------------------------------------------
+
+function showErrors(data) {
+    aNode.style = "";
+    let message = "";
+    for (let name in data) {
+        document.getElementsByName(name)[0].style = "border-color:red";
+        message += `<p><small><i class='fa fa-times-circle-o' style='color:red'></i> ${
+            data[name][0]
+        }</small></p>`;
+    }
+    aNode.innerHTML = message;
+}
+//----------------------------------------------------------------------------------------------------
+function hideError() {
+    aNode.style = "display:none";
+    aNode.innerHTML = "";
 }
 
 //----------------------------------------------------------------------------------------------------
 
 function clearError(nodeId) {
-    let aNode = document.getElementById("alert");
     aNode.style = "display:none";
     aNode.innerHTML = "";
     document.getElementById(nodeId).style = "border-color:";
@@ -157,8 +229,8 @@ function updateVatAndPoundFields(pound) {
 //----------------------------------------------------------------------------------------------------
 
 function updateFormData() {
-    formData.vat = document.getElementById("exp_vat").value;
-    formData.pound = document.getElementById("exp_value_pound").value;
+    formData.exp_vat = document.getElementById("exp_vat").value;
+    formData.exp_value_pound = document.getElementById("exp_value_pound").value;
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -168,7 +240,30 @@ function bindAllEvents() {
     bindExpEuroFieldEvent();
 }
 
+//----------------------------------------------------------------------------------------------------
+
+function sendDataToServer(data) {
+    axios
+        .post("/expenses", data)
+        .then(res => {
+            hideError();
+            hideProgress();
+            showStatus("success");
+            hideStatusNode("success"); //Executes after 5 seconds
+        })
+        .catch(err => {
+            console.log(err.response.data);
+            showErrors(err.response.data);
+            hideProgress();
+            showStatus("error");
+            hideStatusNode("error");
+        });
+}
+
 // ---------------------------------------MAIN--------------------------------------------------------
+
 function main() {
+    hideProgressAndStatusNodes();
     bindAllEvents();
 }
+main();

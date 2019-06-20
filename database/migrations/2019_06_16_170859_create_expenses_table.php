@@ -15,9 +15,11 @@ class CreateExpensesTable extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->decimal('value',9,2);
-            $table->text('reason');
-            $table->date('date');
+            $table->decimal('exp_value',9,2);
+            $table->decimal('exp_value_pound',9,2);
+            $table->decimal('exp_vat',9,2);
+            $table->text('exp_reason');
+            $table->date('exp_date');
             $table->timestamps();
         });
     }

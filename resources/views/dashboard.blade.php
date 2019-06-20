@@ -5,6 +5,7 @@
 <div class="container">
     <!--====================================== START OF ADD NEW EXPENSES PANE ================================= -->
 
+    <span hidden  id="key">{{Auth::user()->api_token}}</span>
     <div class="row justify-content-center">
         <div class="col-10" id="p-form-card">
             <span > <h5 class="ml-3 mt-3"><i class="fa fa-plus"  style="color:purple"> </i>  Add new expenses</h5> <hr/> </span>
@@ -47,17 +48,27 @@
                 
                 </div>
                     
-                   
+                <div class="row">
+                    <div class="col-md-3">
 
-                    <div class="form-group ml-3 mt-3 ">
-                        <div >
-                           
-                            <button  id="save" class="btn btn-lg btn-primary"> <i class="fa fa-save"></i> Save Expense</button>
-                        
+                        <div class="form-group" style="margin-left:18px;margin-top:29px;margin-right:29px;">
+                                <div >
+                                
+                                    <button  id="save" class="btn btn-lg btn-primary"> <i class="fa fa-save"></i> Save Expense</button>
+                                
+                                </div>
+                            
                         </div>
-                    
+                    </div>
+                    <div class="col-md-4 ml-3 mt-5 ">
+                            <span id="progress" style="display:none"> <i class="fa fa-spinner fa-pulse"> </i> {{" "}}Saving...</span>
+                            <span id="status"></span>
                     </div>
                     
+
+                    
+
+                </div>    
                 
                 </form>
 

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+
 class VerifyApiRequestToken
 {
     /**
@@ -16,9 +17,15 @@ class VerifyApiRequestToken
     public function handle($request, Closure $next)
     {
 
-        // if($request->ajax()){
-        //     dd($request->getallheaders());
-        // }
+        if($request->ajax()){
+             
+            
+             $token = $request->user()['api_token'];
+             if(!$token){
+                return response()->json(['Access denied' => 'Unauthorized access'], 401);
+             }
+             
+         }
         return $next($request);
     }
 }

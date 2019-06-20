@@ -1,6 +1,8 @@
 #form-card {
     margin-top: 2%;
-    border-color: #1f0973;
+    border-color: #d1d1d1;
+    border-style: dashed;
+    border-width: 0.04em;
     padding: 10px;
 }
 .fa {
@@ -9,10 +11,18 @@
 button i.fa {
     color: white;
 }
-#save {
+#save,
+.login,
+.register {
     background-color: purple;
     color: white;
     border-color: purple;
+}
+.card-header {
+    border-style: none !important;
+}
+.card {
+    border-style: dashed !important;
 }
 #p-form-card,
 .table-pane {
@@ -41,4 +51,13 @@ textarea:focus {
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
+}
+.card-pane {
+    border-style: none;
+    border-top-style: solid;
+    border-top-width: 30px;
+    border-top-color: purple;
+    margin: 5x;
+    padding: 15px;
+    box-shadow: 0px 0px 5px #d1d1d1;
 }

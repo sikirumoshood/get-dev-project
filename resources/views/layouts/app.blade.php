@@ -16,7 +16,8 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
-    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <!-- Styles -->
@@ -81,7 +82,9 @@
         </main>
     </div>
     <!-- LOAD SCRIPTS -->
+    @if(Request::is('expenses'))
     <script src="/js/custom.js" defer></script>
+    @endif
 </body>
 
 </html>
