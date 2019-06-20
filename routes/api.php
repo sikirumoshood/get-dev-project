@@ -14,11 +14,7 @@ use App\Expenses;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::middleware('auth:api')->get('/expenses',['headers'=>['Accept' => 'application/json']], function(Request $request){
-  $exps = Expenses::all();
-  return response()->json($exps);
-});
+
+Route::get('/test', 'Api\ApiController@test');
+

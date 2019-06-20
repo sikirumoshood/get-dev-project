@@ -1,0 +1,44 @@
+#form-card {
+    margin-top: 2%;
+    border-color: #1f0973;
+    padding: 10px;
+}
+.fa {
+    color: #ff910f;
+}
+button i.fa {
+    color: white;
+}
+#save {
+    background-color: purple;
+    color: white;
+    border-color: purple;
+}
+#p-form-card,
+.table-pane {
+    border-top-style: solid;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-width: 8px;
+    border-top-color: purple;
+    margin: 5x;
+    padding: 15px;
+    box-shadow: 0px 0px 5px #d1d1d1;
+}
+
+hr {
+    opacity: 0.5;
+    background-color: purple;
+    width: 50vw;
+    margin-left: 19px;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: purple !important;
+    border-width: 2px;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
