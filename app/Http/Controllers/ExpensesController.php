@@ -30,12 +30,14 @@ class ExpensesController extends Controller
             'exp_reason'=>'required|string'
         ] );
         if($validator->fails()){
-            return response()->json($validator->messages(),400);
+            $resErrData = ['type' => 'inputErrors','errors'=>$validator->messages()];
+            return response()->json($resErrData,400);
         }
         else{
             $valData = $req->all();
             $valData['user_id'] = $req->user()['id'];
             Expenses::create($valData);
+            
             return $valData;
         }
         

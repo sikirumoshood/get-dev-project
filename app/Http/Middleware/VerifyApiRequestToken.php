@@ -22,7 +22,7 @@ class VerifyApiRequestToken
             
              $token = $request->user()['api_token'];
              if(!$token){
-                return response()->json(['Access denied' => 'Unauthorized access'], 401);
+                return response()->json(['type'=>'accessError','Access denied' => 'Unauthorized access'], 401);
              }
              
          }

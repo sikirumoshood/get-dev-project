@@ -217,6 +217,8 @@ function showError(nodeId, message) {
 function showErrors(data) {
     aNode.style = "";
     let message = "";
+
+    //TODO: Read sth that tells that it a data error else, just show as server error
     for (let name in data) {
         document.getElementsByName(name)[0].style = "border-color:red";
         message += `<p><small><i class='fa fa-times-circle-o' style='color:red'></i> ${
@@ -273,8 +275,11 @@ function sendDataToServer(data) {
             hideStatusNode("success"); //Executes after 5 seconds
         })
         .catch(err => {
-            console.log(err.response.data);
-            showErrors(err.response.data);
+            console.error(err.response.data);
+            if (err.response.data.type === "inputErrors") {
+                showErrors(err.response.data.errors);
+            }
+
             hideProgress();
             showStatus("error");
             hideStatusNode("error");
@@ -287,4 +292,7 @@ function main() {
     hideProgressAndStatusNodes();
     bindAllEvents();
 }
+
+//---------------------------------------RUN SCRIPT---------------------------------------------------
+
 main();
