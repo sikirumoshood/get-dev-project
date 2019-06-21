@@ -2,6 +2,9 @@
 
 const formData = {};
 const expenses = {};
+let loading = false;
+let paginate = { next: false, prev: false };
+
 let aNode = document.getElementById("alert");
 
 // -------------------------------------END OF VARIABLES-------------------------------------------------

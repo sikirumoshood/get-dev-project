@@ -30,14 +30,6 @@ class ApiController extends Controller
                     $user = User::where('api_token', $token)->first();
                     return $user; //User can't be null and request reaches here. Middleware handles that
     }
-
-    public function recentExpense(Request $req){
-
-        $user = $this->getUser($req);
-        $expenses = Expenses::where('user_id',$user->id)->orderBy('created_at','desc')->take(5)->get();
-        return response()->json(['expenses' => $expenses]);
-        
-    }
    
     public function stat(Request $req){
         
