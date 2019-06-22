@@ -7,7 +7,7 @@
 
     <span hidden  id="key">{{Auth::user()->api_token}}</span>
     <div class="row justify-content-center">
-        <div class="col-10" id="p-form-card">
+        <div class="col-11" id="p-form-card">
             <span > <h5 class="ml-3 mt-3"><i class="fa fa-plus"  style="color:purple"> </i>  Add new expenses</h5> <hr/> </span>
             <div id="form-card">
                 <div class="alert alert-danger" id="alert" style="display:none"></div>
@@ -85,7 +85,7 @@
     <!--======================================= SUBMITTED EXPENSES PANE ===================================  -->
     <div class="row justify-content-center mt-4">
 
-        <div class="col-10 table-pane" style="border-top-width:1px">
+        <div class="col-11 table-pane" style="border-top-width:1px">
 
                 <span > <h5 class="ml-3 mt-3"><i class="fa fa-list-alt  " style="color:purple"> </i>  Submitted expenses (<span id="total" style="color:green; font-size:bold"></span>)</h5> <hr/> </span>
 

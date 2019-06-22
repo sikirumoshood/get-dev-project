@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-8 card-pane">
+        <div class="col-10 card-pane">
             <div class="card">
                 <div class="card-header">{{ __('Register') }}</div>
 
