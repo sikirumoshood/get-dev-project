@@ -2,7 +2,7 @@
 Practice project
 This project helps one to enter expenses in euro, converts the value to pounds and computes the vat. 
 
-Link to the live application: http://getdevproject.herokuapp.com
+Link to the live application: https://getdevproject.herokuapp.com
 
 Technologies used:
 
