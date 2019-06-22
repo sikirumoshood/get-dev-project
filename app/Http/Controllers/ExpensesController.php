@@ -9,7 +9,7 @@ class ExpensesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('verifyApiRequestToken');
+        $this->middleware('VerifyApiRequestToken');
       
     }
 
