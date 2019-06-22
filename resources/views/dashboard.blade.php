@@ -18,7 +18,7 @@
                         <div class="col-md-3 m-3">
                                 <label for="exp_value"><i class="fa fa-euro"></i> Expense value <span style="color:red"> *</span></label>
                                 <input id="exp_value" class="form-control" type="text" name="exp_value" required>
-                                <small class="text text-muted">Format: decimal number can be comma seprated followed by a space then EUR. e.g(2,345.56 EUR)</small>
+                                <small class="text text-muted">Format: decimal number can be comma separated followed by a space then EUR. e.g(2,345.56 EUR)</small>
                             
                         </div>
                         <div class="col-md-3 m-3">
@@ -86,25 +86,47 @@
     <div class="row justify-content-center mt-4">
 
         <div class="col-10 table-pane" style="border-top-width:1px">
-                <span > <h5 class="ml-3 mt-3"><i class="fa fa-list-alt  " style="color:purple"> </i>  Submitted expenses</h5> <hr/> </span>
+
+                <span > <h5 class="ml-3 mt-3"><i class="fa fa-list-alt  " style="color:purple"> </i>  Submitted expenses (<span id="total" style="color:green; font-size:bold"></span>)</h5> <hr/> </span>
 
                 <!-- EXPENSES TABLE -->
-                <table id="exp_table" class="table table-bordered">
+                <div class="table-responsive">
+                <i class="fa fa-spinner fa-spin" id="loading-data" style="display:none"></i>
+                    <table id="exp_table" class="table table-bordered  ">
 
-                    <thead>
-                        <tr>
-                            <th>REASON</th>
-                            <th>VALUE</th>
-                            <th>VAT</th>
-                            <th>DATE</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>REASON <i class="fa fa-light-bulb"></i> </th>
+                                <th>VALUE <i class="fa fa-euro"></i></th>
+                                <th>VALUE <i class="fa fa-gbp"></i></th>
+                                <th>VAT <i class="fa fa-gbp"></i></th>
+                                <th>DATE <i class="fa fa-calender-o"></i></th>
+                            </tr>
 
-                    </thead>
+                        </thead>
+                        
+                        <tbody id="t-body">
+                        
 
-                </table>
+                        </tbody>
+
+                    </table>
+                </div>
+                
+
+             <div class="float-right">
+                <div class="form-inline">
+                        <button type="button" id="prev" class="btn prev"><i class="fa fa-chevron-left "></i></button>
+                        <button type="button" id="next" class="btn next"><i class="fa fa-chevron-right "></i></button>
+                </div>
+            </div>
 
         </div>
+ 
 
     </div>
+    <div name="spacer" style="margin-top:40px"></div>
+         
+    
 </div>
 @endsection

@@ -1,13 +1,138 @@
 // -------------------------------------GLOBAL VARIABLES-------------------------------------------------
 
 const formData = {};
-const expenses = {};
-let loading = false;
+let expenses = [];
 let paginate = { next: false, prev: false };
+let fetchCount = 10;
+let expensesCount = 0;
 
 let aNode = document.getElementById("alert");
 
 // -------------------------------------END OF VARIABLES-------------------------------------------------
+
+//--------------------------------------METHODS----------------------------------------------------------
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+//-----------------------------------------------------------------------------------------------------
+function setPgButtonsDisplayMode({ next, prev }) {
+    document.getElementById("next").disabled = !next;
+    document.getElementById("prev").disabled = !prev;
+}
+
+//------------------------------------------------------------------------------------------------------
+
+function setPaginate({ next, prev }) {
+    paginate.next = next;
+    paginate.prev = prev;
+}
+//------------------------------------------------------------------------------------------------------
+
+function setExpenses(exps) {
+    expenses = [...exps];
+}
+//------------------------------------------------------------------------------------------------------
+
+function attachApiTokenToHeader() {
+    if (!axios.defaults.headers.common["Authorization"])
+        axios.defaults.headers.common["Authorization"] =
+            "Bearer " + document.getElementById("key").innerHTML;
+}
+
+//------------------------------------------------------------------------------------------------------
+function resetFetchCount() {
+    fetchCount = 10;
+}
+//------------------------------------------------------------------------------------------------------
+
+function fetchExpenses() {
+    showLoading();
+    attachApiTokenToHeader();
+
+    axios
+        .get(`/api/expenses/paginate/next/5`)
+        .then(res => {
+            setExpenses(res.data.expenses);
+            fetchTotalNumberOfExpenses();
+            setPaginate(res.data.paginate);
+            setPgButtonsDisplayMode(paginate);
+            hideLoading();
+            displayExpenses(expenses);
+        })
+        .catch(err => console.error(err));
+}
+
+//------------------------------------------------------------------------------------------------------
+
+function setExpensesCount({ count }) {
+    expensesCount = count;
+}
+
+//------------------------------------------------------------------------------------------------------
+
+function updateTotalExpenseNode(count) {
+    document.getElementById("total").innerHTML = count;
+}
+
+//------------------------------------------------------------------------------------------------------
+
+function fetchTotalNumberOfExpenses() {
+    attachApiTokenToHeader();
+    axios
+        .get("/api/expenses/stat")
+        .then(res => {
+            setExpensesCount(res.data);
+            updateTotalExpenseNode(expensesCount);
+        })
+        .catch(err => {
+            console.error(err.response.data);
+        });
+}
+
+//------------------------------------------------------------------------------------------------------
+
+function fetchNextExpenses(count) {
+    showLoading();
+    attachApiTokenToHeader();
+
+    axios
+        .get(`/api/expenses/paginate/next/${count}`)
+        .then(res => {
+            if (res.data.paginate.next) fetchCount += 5;
+
+            setExpenses(res.data.expenses);
+
+            setPaginate(res.data.paginate);
+            hideLoading();
+            displayExpenses(expenses);
+            setPgButtonsDisplayMode(paginate);
+        })
+        .catch(err => console.error(err.response.data));
+}
+
+//------------------------------------------------------------------------------------------------------
+function fetchPreviousExpenses(count) {
+    showLoading();
+    attachApiTokenToHeader();
+
+    count = fetchCount -= 5;
+    axios
+        .get(`/api/expenses/paginate/prev/${count}`)
+        .then(res => {
+            if (!res.data.paginate.prev) resetFetchCount();
+
+            setExpenses(res.data.expenses);
+            setPaginate(res.data.paginate);
+            hideLoading();
+            displayExpenses(expenses);
+            setPgButtonsDisplayMode(paginate);
+        })
+        .catch(err => console.error(err.response.data));
+}
+
+//------------------------------------------------------------------------------------------------------
 
 function formatNumberWithEur(x) {
     //Remove spaces
@@ -78,6 +203,22 @@ function setFormData() {
 }
 
 //----------------------------------------------------------------------------------------------------
+function bindFetchNextEvent() {
+    document.getElementById("next").addEventListener("click", () => {
+        fetchNextExpenses(getFetchCount());
+    });
+}
+//----------------------------------------------------------------------------------------------------
+function getFetchCount() {
+    return fetchCount;
+}
+//----------------------------------------------------------------------------------------------------
+function bindFetchPrevEvent() {
+    document.getElementById("prev").addEventListener("click", () => {
+        fetchPreviousExpenses(getFetchCount());
+    });
+}
+//----------------------------------------------------------------------------------------------------
 
 function bindFormEvent() {
     const form = document.getElementById("exp_form");
@@ -141,6 +282,16 @@ function hideProgress() {
 
 //----------------------------------------------------------------------------------------------------
 
+function showLoading() {
+    document.getElementById("loading-data").style = "display:";
+}
+
+//----------------------------------------------------------------------------------------------------
+function hideLoading() {
+    document.getElementById("loading-data").style = "display:none";
+}
+
+//----------------------------------------------------------------------------------------------------
 function resetHeaders() {
     axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
     let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -161,6 +312,7 @@ function hideHeaders() {
     //Must be reset for inbound ajax requests
     delete axios.defaults.headers.common["X-CSRF-TOKEN"];
     delete axios.defaults.headers.common["X-Requested-With"];
+    delete axios.defaults.headers.common["Authorization"];
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -208,6 +360,47 @@ function displayPoundRate(rate) {
     ).innerHTML = `1 EUR = ${rate} Pound sterling `;
 }
 
+//----------------------------------------------------------------------------------------------------
+
+function displayExpenses(expenses) {
+    if (expenses.length > 0) {
+        let oldTableBodyNode = document.getElementById("t-body");
+        let newTableBodyNode = document.createElement("tbody");
+
+        for (let i = 0; i < expenses.length; ++i) {
+            const expense = expenses[i];
+            let rowElement = document.createElement("tr");
+            let valueEuroElement = document.createElement("td");
+            let reasonElement = document.createElement("td");
+            let valuePoundElement = document.createElement("td");
+            let vatElement = document.createElement("td");
+            let dateElement = document.createElement("td");
+
+            valueEuroElement.innerHTML = numberWithCommas(expense.exp_value);
+            reasonElement.innerHTML = expense.exp_reason;
+            valuePoundElement.innerHTML = numberWithCommas(
+                expense.exp_value_pound
+            );
+            vatElement.innerHTML = numberWithCommas(expense.exp_vat);
+            dateElement.innerHTML = expense.exp_date;
+
+            rowElement.append(
+                reasonElement,
+                valueEuroElement,
+                valuePoundElement,
+                vatElement,
+                dateElement
+            );
+            newTableBodyNode.appendChild(rowElement);
+            newTableBodyNode.setAttribute("id", "t-body");
+        }
+        //Replace old table body by new body
+        oldTableBodyNode.parentNode.replaceChild(
+            newTableBodyNode,
+            oldTableBodyNode
+        );
+    }
+}
 //----------------------------------------------------------------------------------------------------
 
 function showError(nodeId, message) {
@@ -264,6 +457,8 @@ function bindAllEvents() {
     ensureOnlySingleConsecutiveSpace();
     bindFormEvent();
     bindExpEuroFieldEvent();
+    bindFetchNextEvent();
+    bindFetchPrevEvent();
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -276,9 +471,9 @@ function sendDataToServer(data) {
             hideProgress();
             showStatus("success");
             hideStatusNode("success"); //Executes after 5 seconds
+            fetchExpenses();
         })
         .catch(err => {
-            console.error(err.response.data);
             if (err.response.data.type === "inputErrors") {
                 showErrors(err.response.data.errors);
             }
@@ -292,8 +487,14 @@ function sendDataToServer(data) {
 // ---------------------------------------MAIN--------------------------------------------------------
 
 function main() {
+    AOS.init();
+
     hideProgressAndStatusNodes();
     bindAllEvents();
+    setPgButtonsDisplayMode(paginate);
+    updateTotalExpenseNode(expensesCount);
+    fetchTotalNumberOfExpenses();
+    fetchExpenses();
 }
 
 //---------------------------------------RUN SCRIPT---------------------------------------------------

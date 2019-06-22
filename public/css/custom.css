@@ -39,6 +39,7 @@ button i.fa {
     background-color: purple;
     color: white;
     border-color: purple;
+    box-shadow: 1px 1px 3px grey;
 }
 .card-header {
     border-style: none !important;
@@ -82,4 +83,25 @@ textarea:focus {
     margin: 5x;
     padding: 15px;
     box-shadow: 0px 0px 30px #d1d1d1;
+}
+.next,
+.prev {
+    background-color: purple;
+    color: white;
+    box-shadow: 1px 1px 3px grey;
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-bottom: 30px;
+}
+.table-responsive {
+    display: table;
+}
+
+#loading-data {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    color: blue;
+    box-shadow: 0px 0px 60px black;
 }

@@ -44,8 +44,11 @@ class ApiController extends Controller
 
         $user = $this->getUser($req);
         $response = [];
-        $response['expenses'] = Expenses::where('user_id',$user->id)->orderBy('created_at','desc')->skip($skip-5)->take($skip)->get();
-
+        if($skip > 5)
+            $response['expenses'] = Expenses::where('user_id',$user->id)->orderBy('created_at','desc')->skip($skip-5)->take($skip-5)->get();
+        else{
+            $response['expenses'] = Expenses::where('user_id',$user->id)->orderBy('created_at','desc')->skip($skip-5)->take($skip)->get();
+        }
         $response['paginate'] = [];
 
         $response['paginate']['next'] = Expenses::where('user_id',$user->id)->orderBy('created_at','desc')->skip($skip)->take($skip+5)->get()->count() > 0 ? true: false;
